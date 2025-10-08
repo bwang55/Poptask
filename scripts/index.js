@@ -10,8 +10,6 @@ const panelOverlay = document.getElementById('panelOverlay');
 const actionPanel = document.getElementById('actionPanel');
 const closePanelButton = document.getElementById('closePanel');
 
-const popTimeouts = new Map();
-
 let sortPreference = localStorage.getItem('poptask_sort') || 'deadline';
 let isPanelOpen = false;
 let panelFocusTimeout;
@@ -199,10 +197,6 @@ function renderTasks() {
 }
 
 function popTask(card, taskId) {
-  if (card.classList.contains('popping')) {
-    return;
-  }
-
   card.classList.add('popping');
   card.style.pointerEvents = 'none';
   const button = card.querySelector('.pop-button');
@@ -212,18 +206,9 @@ function popTask(card, taskId) {
   if ('vibrate' in navigator) {
     navigator.vibrate(30);
   }
-
-  const fallback = window.setTimeout(() => finalizePop(taskId), 520);
-  popTimeouts.set(taskId, fallback);
 }
 
 function finalizePop(taskId) {
-  const timeout = popTimeouts.get(taskId);
-  if (timeout) {
-    window.clearTimeout(timeout);
-    popTimeouts.delete(taskId);
-  }
-
   const tasks = getTasks();
   const taskIndex = tasks.findIndex((task) => task.id === taskId);
   if (taskIndex === -1) {

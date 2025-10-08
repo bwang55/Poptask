@@ -32,15 +32,6 @@ deadlineOptions.forEach((option) => {
 toggleDeadlineFields();
 
 titleInput.addEventListener('input', () => clearValidation(titleInput));
-if (dateInput) {
-  dateInput.addEventListener('input', () => clearValidation(dateInput));
-}
-if (timeInput) {
-  timeInput.addEventListener('input', () => clearValidation(timeInput));
-}
-if (relativeSelect) {
-  relativeSelect.addEventListener('change', () => clearValidation(relativeSelect));
-}
 
 function buildDeadline() {
   const selected = deadlineOptions.find((option) => option.checked)?.value;
@@ -48,7 +39,7 @@ function buildDeadline() {
 
   if (selected === 'absolute') {
     if (!dateInput.value) {
-      return { deadline: null };
+      return null;
     }
     const timeValue = timeInput.value || '00:00';
     const [hours, minutes] = timeValue.split(':').map(Number);
@@ -57,24 +48,19 @@ function buildDeadline() {
       due.setHours(hours, minutes, 0, 0);
     }
     if (due.getTime() < now.getTime()) {
-      showValidationError(dateInput, 'Please choose a future time.');
-      if (timeInput.value) {
-        showValidationError(timeInput);
-      }
-      dateInput.reportValidity();
-      return { deadline: null, invalid: true };
+      return due.toISOString();
     }
-    return { deadline: due.toISOString() };
+    return due.toISOString();
   }
 
   if (selected === 'relative') {
     const offset = Number(relativeSelect.value);
     if (!Number.isNaN(offset)) {
-      return { deadline: new Date(now.getTime() + offset).toISOString() };
+      return new Date(now.getTime() + offset).toISOString();
     }
   }
 
-  return { deadline: null };
+  return null;
 }
 
 function showValidationError(field, message) {
@@ -94,15 +80,6 @@ function clearValidation(field) {
 form.addEventListener('submit', (event) => {
   event.preventDefault();
   clearValidation(titleInput);
-  if (dateInput) {
-    clearValidation(dateInput);
-  }
-  if (timeInput) {
-    clearValidation(timeInput);
-  }
-  if (relativeSelect) {
-    clearValidation(relativeSelect);
-  }
 
   const title = titleInput.value.trim();
   if (!title) {
@@ -112,10 +89,7 @@ form.addEventListener('submit', (event) => {
   }
 
   const description = descriptionInput.value.trim();
-  const { deadline, invalid } = buildDeadline();
-  if (invalid) {
-    return;
-  }
+  const deadline = buildDeadline();
 
   const task = {
     id: generateId(),
