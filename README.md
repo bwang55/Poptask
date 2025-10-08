@@ -52,7 +52,10 @@ All task data is stored locally in the browser. Clearing site data or switching 
 
 Because the app is static, you can deploy it with any file host:
 
-- **GitHub Pages** – push this repository to GitHub and enable Pages for the main branch or `docs/` folder.
+- **GitHub Pages** – push this repository to GitHub and [enable the GitHub Pages workflow](.github/workflows/deploy.yml). The included action publishes the contents of the `main` branch automatically. After the first push:
+  1. Open your repository settings → **Pages**.
+  2. Under **Build and deployment**, choose **GitHub Actions**.
+  3. The "Deploy Poptask to GitHub Pages" workflow will handle future deployments on every push to `main`.
 - **Netlify / Vercel / Render** – create a new site from this repository; no build step is required.
 - **S3 / Cloudflare R2 / Azure Storage** – upload the files and expose them via static website hosting.
 - **Self-hosted** – drop the folder onto any web server (Nginx, Apache, etc.) and point a domain at it.
