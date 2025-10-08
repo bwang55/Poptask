@@ -52,11 +52,10 @@ All task data is stored locally in the browser. Clearing site data or switching 
 
 Because the app is static, you can deploy it with any file host:
 
-- **GitHub Pages (branch deployment)** – push this repository to GitHub and use the built-in branch publishing flow:
+- **GitHub Pages** – push this repository to GitHub and [enable the GitHub Pages workflow](.github/workflows/deploy.yml). The included action publishes the contents of the `main` branch automatically. After the first push:
   1. Open your repository settings → **Pages**.
-  2. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
-  3. Choose either `main` → `/ (root)` or a dedicated `gh-pages` branch if you prefer to keep production separate.
-  4. Save. GitHub will publish the files directly from that branch. The included `.nojekyll` file tells Pages to serve the assets as-is with no build step.
+  2. Under **Build and deployment**, choose **GitHub Actions**.
+  3. The "Deploy Poptask to GitHub Pages" workflow will handle future deployments on every push to `main`.
 - **Netlify / Vercel / Render** – create a new site from this repository; no build step is required.
 - **S3 / Cloudflare R2 / Azure Storage** – upload the files and expose them via static website hosting.
 - **Self-hosted** – drop the folder onto any web server (Nginx, Apache, etc.) and point a domain at it.
@@ -69,16 +68,6 @@ The entry point is `index.html`. Ensure your host serves the files with standard
 - CSS variables in `styles/main.css` centralize colors, shadows, and glass effects. Tweak them to adjust the visual design.
 - `scripts/storage.js` wraps `localStorage` access and handles serialization, making it the best place to add future persistence features.
 - Animations are powered by the Web Animations API to achieve smooth transitions without external libraries.
-
-## Testing
-
-The project ships with a lightweight Node test suite that exercises the storage helpers. Run it locally with:
-
-```bash
-npm test
-```
-
-The tests rely on Node's built-in test runner, so no extra dependencies are required.
 
 ## License
 

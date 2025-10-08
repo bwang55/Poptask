@@ -10,8 +10,6 @@ const panelOverlay = document.getElementById('panelOverlay');
 const actionPanel = document.getElementById('actionPanel');
 const closePanelButton = document.getElementById('closePanel');
 
-const popTimeouts = new Map();
-
 let sortPreference = localStorage.getItem('poptask_sort') || 'deadline';
 let isPanelOpen = false;
 let panelFocusTimeout;
@@ -188,15 +186,17 @@ function renderTasks() {
     deadline.textContent = formatDeadline(task);
 
     button.addEventListener('click', () => popTask(card, task.id));
+    card.addEventListener('animationend', (event) => {
+      if (event.animationName === 'pop' && card.classList.contains('popping')) {
+        finalizePop(task.id);
+      }
+    });
+
     taskList.appendChild(fragment);
   });
 }
 
 function popTask(card, taskId) {
-  if (card.classList.contains('popping')) {
-    return;
-  }
-
   card.classList.add('popping');
   card.style.pointerEvents = 'none';
   const button = card.querySelector('.pop-button');
@@ -206,30 +206,9 @@ function popTask(card, taskId) {
   if ('vibrate' in navigator) {
     navigator.vibrate(30);
   }
-
-  const handleAnimationEnd = (event) => {
-    if (event.target !== card) {
-      return;
-    }
-    finalizePop(taskId);
-  };
-
-  card.addEventListener('animationend', handleAnimationEnd);
-
-  const fallback = window.setTimeout(() => finalizePop(taskId), 650);
-  popTimeouts.set(taskId, { timeout: fallback, handler: handleAnimationEnd, card });
 }
 
 function finalizePop(taskId) {
-  const pending = popTimeouts.get(taskId);
-  if (pending) {
-    window.clearTimeout(pending.timeout);
-    if (pending.card && pending.handler) {
-      pending.card.removeEventListener('animationend', pending.handler);
-    }
-    popTimeouts.delete(taskId);
-  }
-
   const tasks = getTasks();
   const taskIndex = tasks.findIndex((task) => task.id === taskId);
   if (taskIndex === -1) {
