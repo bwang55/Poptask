@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Poptask</title>
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <button class="icon-button" id="menuToggle" type="button" aria-expanded="false" aria-controls="actionPanel" aria-label="Open quick menu">
+          <span aria-hidden="true">☰</span>
+        </button>
+        <div class="app-heading">
+          <h1>Poptask</h1>
+        </div>
+        <div class="queue-count" aria-live="polite">
+          <span id="activeCount" class="queue-count__value">0</span>
+          <span class="queue-count__label">active</span>
+        </div>
+      </header>
+
+      <main class="app-main" id="mainContent">
+        <section class="task-list" id="taskList" aria-live="polite">
+          <div class="empty-state" id="emptyState">
+            <h2>You're all clear.</h2>
+            <p>Tap the plus to capture the next thing on your mind.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <a class="fab" href="add.html" aria-label="Add a task">
+      <span aria-hidden="true">+</span>
+    </a>
+
+    <div class="panel-overlay" id="panelOverlay" hidden></div>
+    <aside class="action-panel" id="actionPanel" role="dialog" aria-modal="true" aria-labelledby="actionPanelTitle" aria-hidden="true">
+      <div class="action-panel__header">
+        <h2 id="actionPanelTitle">Quick menu</h2>
+        <button class="icon-button" id="closePanel" type="button" aria-label="Close quick menu">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="action-panel__section">
+        <h3>Sort tasks</h3>
+        <div class="panel-toggle" role="radiogroup" aria-label="Sorting preference">
+          <button class="panel-toggle__chip" data-sort="deadline" role="radio" aria-checked="true">
+            Deadline
+          </button>
+          <button class="panel-toggle__chip" data-sort="created" role="radio" aria-checked="false">
+            Added time
+          </button>
+        </div>
+      </div>
+      <div class="action-panel__section">
+        <h3>Archive</h3>
+        <p>Celebrate your progress whenever you need a boost.</p>
+        <a class="panel-link" href="archive.html">Open archive</a>
+      </div>
+    </aside>
+
+    <template id="taskTemplate">
+      <article class="task-card">
+        <div class="task-card__content">
+          <div class="task-card__header">
+            <h3 class="task-card__title"></h3>
+            <p class="task-card__deadline" aria-live="polite"></p>
+          </div>
+          <p class="task-card__description"></p>
+        </div>
+        <div class="task-card__actions">
+          <button class="pop-button" type="button">
+            <span>Pop</span>
+          </button>
+        </div>
+      </article>
+    </template>
+
+    <script type="module" src="scripts/index.js"></script>
+  </body>
+</html>
