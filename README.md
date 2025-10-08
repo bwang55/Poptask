@@ -69,16 +69,6 @@ The entry point is `index.html`. Ensure your host serves the files with standard
 - `scripts/storage.js` wraps `localStorage` access and handles serialization, making it the best place to add future persistence features.
 - Animations are powered by the Web Animations API to achieve smooth transitions without external libraries.
 
-## Testing
-
-The project ships with a lightweight Node test suite that exercises the storage helpers. Run it locally with:
-
-```bash
-npm test
-```
-
-The tests rely on Node's built-in test runner, so no extra dependencies are required.
-
 ## License
 
 This project is provided as-is for personal and educational use. Feel free to adapt it for your own deployments.

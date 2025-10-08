@@ -6,8 +6,6 @@ const deadlineOptions = Array.from(
 );
 const absoluteField = document.querySelector('.deadline-field--absolute');
 const relativeField = document.querySelector('.deadline-field--relative');
-const timingSection = document.querySelector('.timing-section');
-const timingStatus = document.getElementById('timingStatus');
 const titleInput = document.getElementById('taskTitle');
 const descriptionInput = document.getElementById('taskDescription');
 const dateInput = document.getElementById('deadlineDate');
@@ -21,58 +19,10 @@ if (dateInput) {
   dateInput.min = today.toISOString().split('T')[0];
 }
 
-function updateTimingSummary() {
-  if (!timingStatus) {
-    return;
-  }
-
-  const selected = deadlineOptions.find((option) => option.checked)?.value;
-
-  if (selected === 'absolute') {
-    if (!dateInput.value) {
-      timingStatus.textContent = 'Select a date';
-      return;
-    }
-
-    const due = new Date(dateInput.value);
-    const timeValue = timeInput.value || '00:00';
-    const [hours, minutes] = timeValue.split(':').map(Number);
-    if (!Number.isNaN(hours) && !Number.isNaN(minutes)) {
-      due.setHours(hours, minutes, 0, 0);
-    }
-
-    if (Number.isNaN(due.getTime())) {
-      timingStatus.textContent = 'Select a date';
-      return;
-    }
-
-    const formatter = new Intl.DateTimeFormat(undefined, {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    });
-    timingStatus.textContent = `Due ${formatter.format(due)}`;
-    return;
-  }
-
-  if (selected === 'relative') {
-    const option = relativeSelect?.selectedOptions?.[0];
-    timingStatus.textContent = option ? `In ${option.textContent}` : 'After a period';
-    return;
-  }
-
-  timingStatus.textContent = 'No deadline';
-}
-
 function toggleDeadlineFields() {
   const selected = deadlineOptions.find((option) => option.checked)?.value;
   absoluteField.hidden = selected !== 'absolute';
   relativeField.hidden = selected !== 'relative';
-  if (timingSection && (selected === 'absolute' || selected === 'relative')) {
-    timingSection.setAttribute('open', '');
-  }
-  updateTimingSummary();
 }
 
 deadlineOptions.forEach((option) => {
@@ -82,24 +32,6 @@ deadlineOptions.forEach((option) => {
 toggleDeadlineFields();
 
 titleInput.addEventListener('input', () => clearValidation(titleInput));
-if (dateInput) {
-  dateInput.addEventListener('input', () => {
-    clearValidation(dateInput);
-    updateTimingSummary();
-  });
-}
-if (timeInput) {
-  timeInput.addEventListener('input', () => {
-    clearValidation(timeInput);
-    updateTimingSummary();
-  });
-}
-if (relativeSelect) {
-  relativeSelect.addEventListener('change', () => {
-    clearValidation(relativeSelect);
-    updateTimingSummary();
-  });
-}
 
 function buildDeadline() {
   const selected = deadlineOptions.find((option) => option.checked)?.value;
@@ -107,7 +39,7 @@ function buildDeadline() {
 
   if (selected === 'absolute') {
     if (!dateInput.value) {
-      return { deadline: null };
+      return null;
     }
     const timeValue = timeInput.value || '00:00';
     const [hours, minutes] = timeValue.split(':').map(Number);
@@ -116,30 +48,19 @@ function buildDeadline() {
       due.setHours(hours, minutes, 0, 0);
     }
     if (due.getTime() < now.getTime()) {
-      showValidationError(dateInput, 'Please choose a future time.');
-      if (timeInput.value) {
-        showValidationError(timeInput);
-      }
-      if (timingSection) {
-        timingSection.setAttribute('open', '');
-      }
-      if (timingStatus) {
-        timingStatus.textContent = 'Pick a future moment';
-      }
-      dateInput.reportValidity();
-      return { deadline: null, invalid: true };
+      return due.toISOString();
     }
-    return { deadline: due.toISOString() };
+    return due.toISOString();
   }
 
   if (selected === 'relative') {
     const offset = Number(relativeSelect.value);
     if (!Number.isNaN(offset)) {
-      return { deadline: new Date(now.getTime() + offset).toISOString() };
+      return new Date(now.getTime() + offset).toISOString();
     }
   }
 
-  return { deadline: null };
+  return null;
 }
 
 function showValidationError(field, message) {
@@ -159,15 +80,6 @@ function clearValidation(field) {
 form.addEventListener('submit', (event) => {
   event.preventDefault();
   clearValidation(titleInput);
-  if (dateInput) {
-    clearValidation(dateInput);
-  }
-  if (timeInput) {
-    clearValidation(timeInput);
-  }
-  if (relativeSelect) {
-    clearValidation(relativeSelect);
-  }
 
   const title = titleInput.value.trim();
   if (!title) {
@@ -177,10 +89,7 @@ form.addEventListener('submit', (event) => {
   }
 
   const description = descriptionInput.value.trim();
-  const { deadline, invalid } = buildDeadline();
-  if (invalid) {
-    return;
-  }
+  const deadline = buildDeadline();
 
   const task = {
     id: generateId(),
@@ -193,9 +102,6 @@ form.addEventListener('submit', (event) => {
   addTask(task);
 
   form.reset();
-  if (timingSection) {
-    timingSection.removeAttribute('open');
-  }
   toggleDeadlineFields();
   window.location.href = 'index.html';
 });
