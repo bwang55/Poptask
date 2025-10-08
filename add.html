@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add a task • Poptask</title>
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+  <body class="form-page">
+    <header class="form-header">
+      <a class="back-link" href="index.html" aria-label="Back to task list">←</a>
+      <h1>Add a task</h1>
+      <span class="back-link placeholder" aria-hidden="true">←</span>
+    </header>
+
+    <main class="form-main">
+      <section class="form-intro" aria-labelledby="quickCaptureTitle">
+        <h2 id="quickCaptureTitle">Quick capture</h2>
+        <p>Write the headline, add the context, then decide when you want it to surface again.</p>
+      </section>
+
+      <form id="taskForm" class="task-form" novalidate>
+        <section class="form-section" aria-labelledby="detailsHeading">
+          <header class="form-section__header">
+            <h2 id="detailsHeading">Task details</h2>
+            <p>Write it like a next step so future-you can jump straight in.</p>
+          </header>
+
+          <div class="field-group">
+            <label for="taskTitle">Task name<span aria-hidden="true">*</span></label>
+            <input
+              id="taskTitle"
+              name="title"
+              type="text"
+              required
+              maxlength="100"
+              placeholder="What needs to be done?"
+              autocomplete="off"
+            />
+            <p class="field-hint" id="titleHint">A short verb-led title works best.</p>
+          </div>
+
+          <div class="field-group">
+            <label for="taskDescription">Description</label>
+            <textarea
+              id="taskDescription"
+              name="description"
+              rows="3"
+              placeholder="Add context, links, or steps (optional)"
+            ></textarea>
+          </div>
+        </section>
+
+        <details class="timing-section" aria-labelledby="deadlineHeading">
+          <summary>
+            <div class="timing-section__summary">
+              <h2 id="deadlineHeading">Timing</h2>
+              <p id="timingHint">Add a gentle reminder when it helps.</p>
+            </div>
+            <span id="timingStatus" class="timing-section__status">No deadline</span>
+          </summary>
+
+          <div class="timing-section__content">
+            <fieldset class="field-group" id="deadlineOptions" aria-describedby="timingHint">
+              <legend class="sr-only">Deadline</legend>
+              <div class="radio-grid">
+                <label class="radio-chip">
+                  <input type="radio" name="deadlineType" value="none" checked />
+                  <span>No deadline</span>
+                </label>
+                <label class="radio-chip">
+                  <input type="radio" name="deadlineType" value="absolute" />
+                  <span>Exact date &amp; time</span>
+                </label>
+                <label class="radio-chip">
+                  <input type="radio" name="deadlineType" value="relative" />
+                  <span>After a period</span>
+                </label>
+              </div>
+
+              <div class="deadline-field deadline-field--absolute" hidden>
+                <div class="field-inline">
+                  <label for="deadlineDate">Select date</label>
+                  <input id="deadlineDate" name="deadlineDate" type="date" />
+                </div>
+                <div class="field-inline">
+                  <label for="deadlineTime">Select time</label>
+                  <input id="deadlineTime" name="deadlineTime" type="time" />
+                </div>
+              </div>
+
+              <div class="deadline-field deadline-field--relative" hidden>
+                <div class="field-inline">
+                  <label for="deadlineRelative">Remind me after</label>
+                  <select id="deadlineRelative" name="deadlineRelative">
+                    <option value="300000">5 minutes</option>
+                    <option value="900000">15 minutes</option>
+                    <option value="1800000">30 minutes</option>
+                    <option value="3600000">1 hour</option>
+                    <option value="7200000">2 hours</option>
+                    <option value="86400000">1 day</option>
+                    <option value="172800000">2 days</option>
+                    <option value="604800000">1 week</option>
+                  </select>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </details>
+
+        <div class="form-actions">
+          <button type="submit" class="primary-button">Add to queue</button>
+          <a class="secondary-button" href="index.html">Cancel</a>
+        </div>
+      </form>
+    </main>
+
+    <script type="module" src="scripts/add.js"></script>
+  </body>
+</html>
