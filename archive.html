@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Archive • Poptask</title>
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+  <body class="archive-page">
+    <header class="archive-header">
+      <a class="back-link" href="index.html" aria-label="Back to task list">←</a>
+      <h1>Archive</h1>
+      <button class="clear-archive" id="clearArchive" type="button">Clear</button>
+    </header>
+
+    <main class="archive-main">
+      <section class="archive-list" id="archiveList" aria-live="polite">
+        <div class="empty-state" id="archiveEmpty">
+          <h3>No popped tasks yet.</h3>
+          <p>Pop a task to celebrate the progress!</p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="scripts/archive.js"></script>
+  </body>
+</html>
